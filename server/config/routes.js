@@ -13,6 +13,7 @@ module.exports = function (app) {
 	}); 
 	
 	app.post("/login", controllers.user.login);
+	app.post("/detect", controllers.face.detect);
 	app.get("/getAll", controllers.user.getAll);
 	app.get("/", controllers.view.homePage);
 	app.get("*", controllers.view.errorPage);

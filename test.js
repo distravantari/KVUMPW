@@ -1,40 +1,23 @@
-// =======================
-// Import Libraries
-// =======================
-var express = require("express");
-var hbs = require("hbs");
-var hbsutils = require("hbs-utils")(hbs);
-var compress = require("compression");
+var cv = require('opencv');
 
-var app = express();
+var COLOR = [0, 255, 0]; // default red
+var thickness = 2; // default 1
 
-global.__root = __dirname + "/"; // eslint-disable-line
+cv.readImage('./asd.jpg', function(err, im) {
+  if (err) console.log('img ',err);
+  if (im.width() < 1 || im.height() < 1) console.log('img ',err);
 
-process.on("uncaughtException", function (err) {
-	console.log("Caught exception: " + err); // eslint-disable-line
+  im.detectObject('./node_modules/opencv/data/haarcascade_frontalface_alt2.xml', {}, function(err, faces) {
+    if (err) console.log('img ',err);
+
+    for (var i = 0; i < faces.length; i++) {
+      face = faces[i];
+      im.rectangle([face.x, face.y], [face.width, face.height], COLOR, 2);
+    }
+
+    console.log('success')
+    // im.save('./tmp/face-detection-rectangle.png');
+    // console.log('Image saved to ./tmp/face-detection-rectangle.png '+im);
+  });
+
 });
-
-// =======================
-// Expressjs Configuration
-// =======================
-app.use(compress());
-app.use("/assets", express.static(__dirname + "/assets")); // eslint-disable-line
-app.use("/public", express.static(__dirname + "/public")); // eslint-disable-line
-
-hbs.registerPartials(__dirname + "/views/partials"); // eslint-disable-line
-hbsutils.registerWatchedPartials(__dirname + "/views/partials"); // eslint-disable-line
-
-app.set("view engine", "hbs");
-app.set("views", __dirname + "/views"); // eslint-disable-line
-app.disable("x-powered-by");
-
-// =======================
-// Routes
-// =======================
-require(__root + "server/config/routes").routes(app); // eslint-disable-line
-
-// =======================
-// Launch Application
-// =======================
-var PORT = 3010;
-app.listen(PORT);

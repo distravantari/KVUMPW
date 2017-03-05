@@ -1,5 +1,5 @@
 import { Component } from "react";
-import Recognition from "az-client/model/recognition";
+import Recognition from "az-client/store/action/recognition";
 
 // Webcam component
 class Face extends Component {

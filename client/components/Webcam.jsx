@@ -1,7 +1,7 @@
 import { Component, PropTypes } from "react";
 // import Webcam from "react-webcam";
-import Webcam from "az-client/model/camera";
-import { dropHandler } from "az-client/model/action";
+import Webcam from "az-client/store/action/camera";
+import { dropHandler } from "az-client/store/action";
 
 // Webcam component
 class Cam extends Component {
@@ -24,7 +24,7 @@ class Cam extends Component {
 				<Webcam width="300" height="300" ref="webcam" />
 				<div className="controls">
 					<button onClick={() => this.screenshot()}>capture</button>
-					<button type="button" onClick={() => this.context.router.push("/home")}>Dropzone</button>
+					<button type="button" onClick={() => this.context.router.push("/")}>Dropzone</button>
 				</div>
 				{this.state.screenshot ? (
 					<div>

@@ -1,6 +1,7 @@
 import { Component, PropTypes } from "react";
 import Dropzone from "react-dropzone";
-import { dropHandler } from "az-client/model/action";
+import * as actions from "az-client/store/action";
+import * as constant from "az-client/store/action/const";
 
 // Home component
 class Drop extends Component {
@@ -18,8 +19,28 @@ class Drop extends Component {
 	}
 
 	onDrop(files) {
-		this.setState({
-			files: files
+		actions.checkImage(files.preview)
+		.then((img) => {
+			let result = `image height/widht should be ${constant.imgDimention.height} and ${constant.imgDimention.width}`;
+			if (img.height === constant.imgDimention.height) {
+				if (img.width === constant.imgDimention.width) {
+					result = "success";
+				}
+			}
+			return result;
+		})
+		.then((response) => {
+			if (response === "success") {
+				const img = new Image();
+				img.src = files.preview;
+				files.preview = actions.grayScale(img);
+				this.setState({
+					files: files
+				});
+			}
+			else {
+				alert(response);
+			}
 		});
 	}
 
@@ -31,7 +52,7 @@ class Drop extends Component {
 		return (
 			<div>
 				<div style={ { cursor: "pointer" } }>
-					<Dropzone ref="dropzone" multiple={false} accept={"image/*"} onDrop={(file) => this.onDrop(file)}>
+					<Dropzone ref="dropzone" multiple={false} accept={"image/*"} onDrop={(file) => this.onDrop(file[0])}>
 						<div> Drop a photo, or click to add. </div>
 					</Dropzone>
 					<button type="button" onClick={() => this.context.router.push("/cam")}>Photo</button>
@@ -42,7 +63,7 @@ class Drop extends Component {
 				{this.state.files ? (
 					<div>
 						<div>
-							<img src={this.state.files[0].preview} />
+							<img src={this.state.files.preview} />
 							<button onClick={() => this.proceed()}>proceed</button>
 						</div>
 					</div>
@@ -52,7 +73,7 @@ class Drop extends Component {
 	}
 
 	proceed() {
-		dropHandler(this.state.files);
+		actions.dropHandler(this.state.files);
     }
 }
 

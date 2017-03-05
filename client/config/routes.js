@@ -1,7 +1,6 @@
 import React from "react";
 
 // component
-import Authentication from "az-client/components/Authentication";
 import DropFile from "az-client/components/Dropfile";
 import Webcam from "az-client/components/Webcam";
 import Face from "az-client/components/Face";
@@ -10,17 +9,15 @@ import Face from "az-client/components/Face";
 import Index from "az-client/pages/index";
 
 import { Router, Route, useRouterHistory, IndexRoute } from "react-router";
-
 import createHashHistory from "history/lib/createHashHistory";
 const history = useRouterHistory(createHashHistory)({});
 
 export default(
   <Router history={history} onUpdate={() => window.scrollTo(0, 0)}>
     <Route path="/" component={ Index } >
-      <Route path="/Home" component={ DropFile }/>
       <Route path="/Cam" component={ Webcam }/>
       <Route path="/Face" component={ Face }/>
-      <IndexRoute component={ Authentication } />
+      <IndexRoute component={ DropFile } />
     </Route>
   </Router>
 );
