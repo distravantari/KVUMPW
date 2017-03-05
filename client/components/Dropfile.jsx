@@ -1,4 +1,5 @@
 import { Component, PropTypes } from "react";
+import { connect } from "react-redux";
 import Dropzone from "react-dropzone";
 import * as actions from "az-client/store/action";
 import * as constant from "az-client/store/action/const";
@@ -34,13 +35,14 @@ class Drop extends Component {
 				const img = new Image();
 				img.src = files.preview;
 				files.preview = actions.grayScale(img);
-				this.setState({
-					files: files
-				});
+				return files;
 			}
-			else {
-				alert(response);
-			}
+			alert(response);
+		})
+		.then((grayimage) => {
+			this.setState({
+				files: grayimage
+			});
 		});
 	}
 
@@ -64,7 +66,7 @@ class Drop extends Component {
 					<div>
 						<div>
 							<img src={this.state.files.preview} />
-							<button onClick={() => this.proceed()}>proceed</button>
+							<button onClick={() => this.proceed(this.state.files)}>proceed</button>
 						</div>
 					</div>
 				) : null}
@@ -72,9 +74,35 @@ class Drop extends Component {
 		);
 	}
 
-	proceed() {
-		actions.dropHandler(this.state.files);
+	proceed(files) {
+		const grey = actions.convertToFile(files.preview, 'grayScale');
+		grey.preview = this.state.files.preview;
+		actions.dropHandler(grey)
+		.then((face) => {
+			this.props.receiveTarget(face);
+		})
+		.then(() => {
+			return actions.checkFace(this.props.target.path);
+		})
+		.then((response) => {
+			alert(response.text);
+		})
+		.catch((err) => {
+			alert(`err .. ${err}`);
+		});
     }
 }
 
-export default Drop;
+const mapStateToProps = (state) => {
+	return {
+		target: state.target
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      receiveTarget: (face) => dispatch(actions.receiveTarget(face))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Drop);

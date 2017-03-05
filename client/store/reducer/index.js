@@ -1,5 +1,5 @@
 // import _ from "lodash"
-import * as con from "../action/const"; // ALL CONSTATNTA FIELD
+import * as constant from "../action/const"; // ALL CONSTATNTA FIELD
 
 const initialState = {
   target: {}
@@ -7,10 +7,10 @@ const initialState = {
 
 const receiveAbout = (state = initialState, action) => {
     switch (action.type) {
-        case con.ACTReceive: {
+        case constant.ACTReceive: {
             const result = action.payload;
             return Object.assign({}, state, {
-                target: result.response
+                target: result.face.body
             });
         }
         default:

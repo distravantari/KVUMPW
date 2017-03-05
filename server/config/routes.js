@@ -1,6 +1,8 @@
 /* global __root */
 
 var controllers = require('../app/controllers')
+var multer = require('multer'); // to upload the secret face to a temporary file
+var upload = multer({ dest: './client/store/tmp/' }); // this is the temporary destination file
 
 // =======================
 // Routes
@@ -17,6 +19,6 @@ module.exports = function (app) {
 	app.get("/getAll", controllers.user.getAll);
 	app.get("/", controllers.view.homePage);
 	app.get("*", controllers.view.errorPage);
-	app.post('/upload', controllers.upload);
+	app.post('/upload', upload.single("photo"), controllers.upload);
 
 };

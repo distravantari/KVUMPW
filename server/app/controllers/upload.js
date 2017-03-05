@@ -1,7 +1,4 @@
-var multer = require('multer'); // to upload the secret face to a temporary file
-var upload = multer({ dest: './client/store/tmp' }); // this is the temporary destination file
-
-module.exports = upload.single('photo'), (req, res, next) => {
-    res.send("successfully upload the photo");
+module.exports = (req, res, next) => {
+    res.send(req.file);
     res.end(req.file);
 };

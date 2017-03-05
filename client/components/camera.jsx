@@ -142,8 +142,8 @@ export default class Webcam extends Component {
 
       return;
     }
-
     let src = window.URL.createObjectURL(stream);
+    // console.log('stream ', src);
 
     this.stream = stream;
     this.setState({

@@ -1,21 +1,25 @@
 import request from "superagent";
 import * as constant from "az-client/store/action/const";
 
+// upload image to store/tmp
 export const dropHandler = (file) => {
-    const photo = new FormData();
-    photo.append("photo", file[0]);
-    request.post("/upload")
+    return new Promise((resolve, reject) => {
+        const photo = new FormData();
+        photo.append("photo", file);
+        request
+        .post("/upload")
         .send(photo)
         .end((err, resp) => {
             if (err) {
                 console.error(err);
             }
             console.log("response: ", resp);
-            alert(resp.text);
-            return resp;
+            resolve(resp);
         });
+    })
 };
 
+// check if input image == face
 export const checkFace = (file) => {
     return new Promise((resolve, reject) => {
         request
@@ -29,6 +33,7 @@ export const checkFace = (file) => {
     });
 };
 
+// convert image to grayscale
 export const grayScale = (imgObj) => {
     const canvas = document.createElement("canvas");
     const canvasContext = canvas.getContext("2d");
@@ -57,6 +62,7 @@ export const grayScale = (imgObj) => {
     return canvas.toDataURL();
 };
 
+// check if image dimention is 300x255
 export const checkImage = (blob) => {
     const check = new Promise((resolve) => {
         const img = document.createElement("img");
@@ -69,3 +75,28 @@ export const checkImage = (blob) => {
     });
     return check;
 };
+
+// convert dataURL to file
+export const convertToFile = (dataurl, filename) => {
+    const arr = dataurl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+}
+
+// save image target to redux
+export const receiveTarget = (face) => {
+    return dispatch => {
+        dispatch({
+            type: constant.ACTReceive,
+            payload: {
+                face
+            }
+        })   
+    }
+}

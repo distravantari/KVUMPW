@@ -1,7 +1,7 @@
 import { Component, PropTypes } from "react";
 // import Webcam from "react-webcam";
-import Webcam from "az-client/store/action/camera";
-import { dropHandler } from "az-client/store/action";
+import Webcam from "./camera";
+import * as actions from "az-client/store/action";
 
 // Webcam component
 class Cam extends Component {
@@ -36,27 +36,16 @@ class Cam extends Component {
 		);
 	}
 
-    convertToFile(dataurl, filename) {
-		const arr = dataurl.split(",");
-		const mime = arr[0].match(/:(.*?);/)[1];
-		const bstr = atob(arr[1]);
-		let n = bstr.length;
-		const u8arr = new Uint8Array(n);
-		while (n--) {
-			u8arr[n] = bstr.charCodeAt(n);
-		}
-		return new File([u8arr], filename, { type: mime });
-	}
-
 	screenshot() {
         const screenshot = this.refs.webcam.getScreenshot();
         this.setState({ screenshot: screenshot });
     }
 
     proceed() {
-        const file = [this.convertToFile(this.state.screenshot, "face.png")];
+        const file = [actions.convertToFile(this.state.screenshot, "face.png")];
 		file[0].preview = this.refs.webcam.state.src;
-		dropHandler(file);
+		// file[0].preview = this.state.screenshot;
+		actions.dropHandler(file[0]);
     }
 }
 
