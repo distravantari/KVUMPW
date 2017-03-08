@@ -5,7 +5,8 @@ var connection = null;
 
 function setup(db, cb) {
   require('./user')(orm, db);
-
+  require('./faceone')(orm, db);
+  require('./faceone')(orm, db);
   return cb(null, db);
 }
 

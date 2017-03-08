@@ -1,6 +1,5 @@
 import request from "superagent";
 import * as constant from "az-client/store/action/const";
-// import getPixels from "get-pixels";
 
 // upload image to store/tmp
 export const dropHandler = (file) => {
@@ -10,6 +9,23 @@ export const dropHandler = (file) => {
         request
         .post("/upload")
         .send(photo)
+        .end((err, resp) => {
+            if (err) {
+                console.error(err);
+            }
+            console.log("response: ", resp);
+            resolve(resp);
+        });
+    })
+};
+
+// upload face to FACEDB
+export const saveFaceToDB = (file) => {
+    return new Promise((resolve, reject) => {
+        const photo = new FormData();
+        request
+        .post("/savephoto")
+        .send({face: file})
         .end((err, resp) => {
             if (err) {
                 console.error(err);
@@ -46,7 +62,6 @@ export const grayScale = (imgObj) => {
 
     canvasContext.drawImage(imgObj, 0, 0);
     const imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
-    console.log(imgPixels);
 
     const skip = 4; // skip four piksel because RGB is 3 piksel
     const rgb = 3; // the total piksel RGB has
@@ -72,6 +87,7 @@ export const grayScale = (imgObj) => {
     return canvas.toDataURL();
 };
 
+// set image graylevel
 export const grayLevel = () => {
     
     const max = 255;
@@ -89,7 +105,7 @@ export const grayLevel = () => {
     for (let i = 0; i < length; i++) { 
         if(temp >= Number.MAX_VALUE){
             // console.log("first if ", temp);
-            values.push(max);
+            values.push(0);
         }
         else if(temp == ((max)*-1)){
             // console.log("second if ", temp);
@@ -143,13 +159,3 @@ export const receiveTarget = (face) => {
         })   
     }
 }
-
-// export const checkPixel = (img) => {
-//     getPixels(img, function(err, pixels) {
-//         if(err) {
-//             console.log("Bad image path")
-//             return
-//         }
-//         console.log("got pixels", pixels.shape.slice())
-//     })
-// }

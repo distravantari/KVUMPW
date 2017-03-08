@@ -67,11 +67,27 @@ class Drop extends Component {
 						<div>
 							<img src={this.state.files.preview} />
 							<button onClick={() => this.proceed(this.state.files)}>proceed</button>
+							<button onClick={() => this.saved(this.state.files)}>save to DB</button>
 						</div>
 					</div>
 				) : null}
 			</div>
 		);
+	}
+
+	saved(files) {
+		const grey = actions.convertToFile(files.preview, "grayScale");
+		grey.preview = this.state.files.preview;
+		actions.saveFaceToDB(grey)
+		.then(() => {
+			return actions.checkFace(this.props.target.path);
+		})
+		.then((response) => {
+			alert(response.text);
+		})
+		.catch((err) => {
+			alert(`err .. ${err}`);
+		});
 	}
 
 	proceed(files) {

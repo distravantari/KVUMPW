@@ -30,7 +30,7 @@ module.exports = {
                     // res.send('success ');
                     response = "success";
                 }
-                console.log('row ', im.row(0));
+                // console.log('row ', im.row(0));
             }
 
             res.send(response);

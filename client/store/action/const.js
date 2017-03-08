@@ -1,5 +1,5 @@
 export const ACTReceive = "RECEIVE";
-export const salt = "123";
+export const salt = "MAR0901";
 
 export const imgDimention = {
     height: 255,

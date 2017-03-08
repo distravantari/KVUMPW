@@ -19,6 +19,7 @@ module.exports = function (app) {
 	app.get("/getAll", controllers.user.getAll);
 	app.get("/", controllers.view.homePage);
 	app.get("*", controllers.view.errorPage);
-	app.post('/upload', upload.single("photo"), controllers.upload);
+	app.post('/upload', upload.single("photo"), controllers.upload.local);
+	app.post('/savephoto', controllers.upload.dbsave);
 
 };
