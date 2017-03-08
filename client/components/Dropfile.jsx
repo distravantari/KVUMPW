@@ -75,7 +75,7 @@ class Drop extends Component {
 	}
 
 	proceed(files) {
-		const grey = actions.convertToFile(files.preview, 'grayScale');
+		const grey = actions.convertToFile(files.preview, "grayScale");
 		grey.preview = this.state.files.preview;
 		actions.dropHandler(grey)
 		.then((face) => {

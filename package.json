@@ -66,6 +66,7 @@
     "express": "^4.1.1",
     "font-awesome": "^4.6.3",
     "fs": "0.0.1-security",
+    "get-pixels": "^3.3.0",
     "hbs": "^4.0.0",
     "hbs-utils": "0.0.3",
     "jquery": "^2.1.4",

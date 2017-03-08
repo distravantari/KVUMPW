@@ -5,4 +5,5 @@ export const imgDimention = {
     height: 255,
 	width: 300
 };
-export const graylevel = 4;
+export const graylevel = 10;
+
