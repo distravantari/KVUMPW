@@ -40,6 +40,8 @@ class Drop extends Component {
 			alert(response);
 		})
 		.then((grayimage) => {
+			const img = new Image();
+			img.src = grayimage.preview;
 			this.setState({
 				files: grayimage
 			});
@@ -66,8 +68,8 @@ class Drop extends Component {
 					<div>
 						<div>
 							<img src={this.state.files.preview} />
-							<button onClick={() => this.proceed(this.state.files)}>proceed</button>
-							<button onClick={() => this.saved(this.state.files)}>save to DB</button>
+							<button onClick={() => this.proceed(this.state.files, "next")}>proceed</button>
+							<button onClick={() => this.proceed(this.state.files, "saved")}>save to DB</button>
 						</div>
 					</div>
 				) : null}
@@ -75,22 +77,7 @@ class Drop extends Component {
 		);
 	}
 
-	saved(files) {
-		const grey = actions.convertToFile(files.preview, "grayScale");
-		grey.preview = this.state.files.preview;
-		actions.saveFaceToDB(grey)
-		.then(() => {
-			return actions.checkFace(this.props.target.path);
-		})
-		.then((response) => {
-			alert(response.text);
-		})
-		.catch((err) => {
-			alert(`err .. ${err}`);
-		});
-	}
-
-	proceed(files) {
+	proceed(files, status) {
 		const grey = actions.convertToFile(files.preview, "grayScale");
 		grey.preview = this.state.files.preview;
 		actions.dropHandler(grey)
@@ -101,6 +88,9 @@ class Drop extends Component {
 			return actions.checkFace(this.props.target.path);
 		})
 		.then((response) => {
+			if (status === "saved" && response.text !== "error is not a face") {
+				actions.saveFaceToDB(this.props.target);
+			}
 			alert(response.text);
 		})
 		.catch((err) => {

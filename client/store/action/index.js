@@ -28,9 +28,8 @@ export const saveFaceToDB = (file) => {
         .send({face: file})
         .end((err, resp) => {
             if (err) {
-                console.error(err);
+                reject(err);
             }
-            console.log("response: ", resp);
             resolve(resp);
         });
     })
@@ -44,8 +43,11 @@ export const checkFace = (file) => {
         .type("form")
         .send({ photo: file })
         .end((err, res) => {
-            if (err) reject(err);
-            resolve(res);
+            if (err) {
+                reject(err);
+            }else{
+                resolve(res);
+            }
         });
     });
 };
@@ -87,6 +89,46 @@ export const grayScale = (imgObj) => {
     return canvas.toDataURL();
 };
 
+// set image piksel expansion
+export const expansion = (imgObj) => {
+    const canvas = document.createElement("canvas");
+    const canvasContext = canvas.getContext("2d");
+
+    const imgW = imgObj.width;
+    const imgH = imgObj.height;
+    canvas.width = imgW;
+    canvas.height = imgH;
+
+    canvasContext.drawImage(imgObj, 0, 0);
+    const imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
+
+    let ourPixel = [];
+    const gl = grayLevel();
+    imgPixels.data.map((val, idx) => {
+        for (let i = 0; i < gl.length; i++) {
+            if(val === gl[i]){
+                const black = i*Number(constant.pixelDiff());
+                const white = Number(constant.pixelExpansion)-black;
+                const subpixel = [];
+                for (let j = 0; j < gl.length; j++) {
+                    if(j < black) {
+                        subpixel.push(0); // black subpixel
+                    }
+                    else {
+                        subpixel.push(1); // white subpixel
+                    }
+                }
+                ourPixel.push(subpixel);
+            }
+        }
+    });
+
+    // console.log(imgPixels.data.entries()); // to see all the imgPixels entries
+    console.log(ourPixel);
+    canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+    return canvas.toDataURL();
+};
+
 // set image graylevel
 export const grayLevel = () => {
     
@@ -94,6 +136,8 @@ export const grayLevel = () => {
     const min = 0;
     let gl = constant.graylevel;
     console.log("gl: ", gl);
+    console.log("pixelExpansion: ", constant.pixelExpansion);
+    console.log("pixelDiff: ", constant.pixelDiff());
     let length = 0;
 
     if(gl <= 0) length = 1;
@@ -118,6 +162,7 @@ export const grayLevel = () => {
         }
     }
 
+    console.log('all gl ', values);
     return values;
 };
 

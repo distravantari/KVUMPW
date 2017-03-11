@@ -28,7 +28,7 @@ module.exports = {
                     }
                     im.save('./client/store/tmp/face-target.png');
                     // res.send('success ');
-                    response = "success";
+                    response = "success ";
                 }
                 // console.log('row ', im.row(0));
             }
