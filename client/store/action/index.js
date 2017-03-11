@@ -107,10 +107,10 @@ export const expansion = (imgObj) => {
     imgPixels.data.map((val, idx) => {
         for (let i = 0; i < gl.length; i++) {
             if(val === gl[i]){
-                const black = i*Number(constant.pixelDiff());
-                const white = Number(constant.pixelExpansion)-black;
+                const white = i*Number(constant.pixelDiff());
+                const black = Number(constant.pixelExpansion)-white;
                 const subpixel = [];
-                for (let j = 0; j < gl.length; j++) {
+                for (let j = 0; j < constant.pixelExpansion; j++) {
                     if(j < black) {
                         subpixel.push(0); // black subpixel
                     }
@@ -124,9 +124,9 @@ export const expansion = (imgObj) => {
     });
 
     // console.log(imgPixels.data.entries()); // to see all the imgPixels entries
-    console.log(ourPixel);
-    canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
-    return canvas.toDataURL();
+    // console.log('distra => ', imgPixels.data[5]);
+    // console.log(ourPixel[5]);
+    return ourPixel;
 };
 
 // set image graylevel

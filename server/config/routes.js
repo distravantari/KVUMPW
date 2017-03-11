@@ -21,5 +21,6 @@ module.exports = function (app) {
 	app.get("*", controllers.view.errorPage);
 	app.post('/upload', upload.single("photo"), controllers.upload.local);
 	app.post('/savephoto', controllers.upload.dbsave);
+	app.post('/getShadow', controllers.face.getShadow);
 
 };

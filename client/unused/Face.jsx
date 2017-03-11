@@ -1,12 +1,12 @@
 import { Component } from "react";
-import Recognition from "az-client/store/action/recognition";
+// import Recognition from "az-client/store/action/recognition";
 
 // Webcam component
 class Face extends Component {
 	render() {
 		return (
 			<div>
-				{ Recognition }
+				{/*	{ Recognition } */}
 			</div>
 		);
 	}

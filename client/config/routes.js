@@ -2,8 +2,8 @@ import React from "react";
 
 // component
 import DropFile from "az-client/components/Dropfile";
-import Webcam from "az-client/components/Webcam";
-import Face from "az-client/components/Face";
+import Webcam from "az-client/unused/Webcam";
+import Face from "az-client/unused/Face";
 
 // pages
 import Index from "az-client/pages/index";

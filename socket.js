@@ -20,6 +20,9 @@ module.exports.start = function (done) {
 
   var server = http.createServer(app);
 
+  var io = require('socket.io')(server);
+  // io.on('connection', require('./server/socket/face'));
+
   server.listen(settings.port, function () {
     console.log( ("Listening on port " + settings.port).green );
 

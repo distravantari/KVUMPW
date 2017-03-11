@@ -42,6 +42,7 @@ class Drop extends Component {
 		.then((grayimage) => {
 			const img = new Image();
 			img.src = grayimage.preview;
+			console.log("list expansion pixel: ", actions.expansion(img));
 			this.setState({
 				files: grayimage
 			});

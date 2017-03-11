@@ -2,4 +2,4 @@
 public/
 server/index.js
 client/store/action/
-client/components/camera.jsx
+client/unused/*
