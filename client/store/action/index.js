@@ -11,9 +11,8 @@ export const dropHandler = (file) => {
         .send(photo)
         .end((err, resp) => {
             if (err) {
-                console.error(err);
+                reject(err);
             }
-            console.log("response: ", resp);
             resolve(resp);
         });
     })
@@ -31,6 +30,21 @@ export const saveFaceToDB = (file) => {
                 reject(err);
             }
             resolve(resp);
+        });
+    })
+};
+
+// receive all FACEDB
+export const receiveFaceDB = () => {
+    return new Promise((resolve, reject) => {
+        const photo = new FormData();
+        request
+        .post("/getShadow")
+        .end((err, resp) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(resp.body);
         });
     })
 };

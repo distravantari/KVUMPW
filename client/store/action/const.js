@@ -13,3 +13,7 @@ export const pixelExpansion = 9;
 export const pixelDiff = () => {
     return (Number(pixelExpansion)/(Number(graylevel)-1));
 };
+
+export const randomize = (item) => {
+    return Math.floor(Math.random()*item.length);
+}

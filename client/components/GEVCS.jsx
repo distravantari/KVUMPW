@@ -1,6 +1,5 @@
 import { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import Dropzone from "react-dropzone";
 import * as actions from "az-client/store/action";
 import * as constant from "az-client/store/action/const";
 
@@ -15,41 +14,67 @@ class GEVCS extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			files: "",
+			images: [],
 		};
 	}
 
+	componentDidMount() {
+		const temp = [];
+		actions.receiveFaceDB()
+		.then((object) => {
+			const randIdx1 = constant.randomize(object); // random index for first shadow
+			let randIdx2 = constant.randomize(object); // random index for first shadow
+
+			while (randIdx2 === randIdx1) {
+				randIdx2 = constant.randomize(object);
+			}
+
+			temp.push(this.props.target); // target image
+			temp.push(object[randIdx1].face); // first shadow
+			temp.push(object[randIdx2].face); // second shadow
+			console.log(`key selected: ${object[randIdx1].id} & ${object[randIdx2].id}`);
+			this.setState({
+				images: temp
+			});
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+	}
+
 	render() {
-		return (
-			<div>
-				<div style={ { cursor: "pointer" } }>
-					<Dropzone ref="dropzone" multiple={false} accept={"image/*"} onDrop={(file) => this.onDrop(file[0])}>
-						<div> Drop a photo, or click to add. </div>
-					</Dropzone>
-					<button type="button" onClick={() => this.context.router.push("/cam")}>Photo</button>
-					<button type="button" onClick={() => this.onOpenClick()}>
-						Click to add
-					</button>
-				</div>
-				{this.state.files ? (
-					<div>
-						<div>
-							<img src={this.state.files.preview} />
-							<button onClick={() => this.proceed(this.state.files, "next")}>proceed</button>
-							<button onClick={() => this.proceed(this.state.files, "saved")}>save to DB</button>
-						</div>
-					</div>
-				) : null}
-			</div>
-		);
+		// console.log('state: ', this.state.images);
+		let show = (<div> Loading .. </div>);
+		if (this.state.images.length > 0) {
+			show = (<div>
+						<img className="col-3" src={this.state.images[0].preview} />
+						<div className="col-1"> &nbsp; </div>
+						<img className="col-3" src={this.state.images[1].preview} />
+						<div className="col-1"> &nbsp; </div>
+						<img className="col-3" src={this.state.images[2].preview} />
+						<h1>GEVCS</h1>
+					</div>);
+		}
+		this.expansion();
+		return (show);
+	}
+
+	expansion() {
+		this.state.images.map((val) => {
+			const img = new Image();
+			img.src = val.preview;
+			console.log("list expansion pixel: ", actions.expansion(img));
+		});
 	}
 }
 
 const mapStateToProps = (state) => {
-	return {};
+	return {
+		target: state.target
+	};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = () => {
     return {};
 };
 

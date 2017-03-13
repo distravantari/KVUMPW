@@ -40,9 +40,9 @@ class Drop extends Component {
 			alert(response);
 		})
 		.then((grayimage) => {
-			const img = new Image();
-			img.src = grayimage.preview;
-			console.log("list expansion pixel: ", actions.expansion(img));
+			// const img = new Image();
+			// img.src = grayimage.preview;
+			// console.log("list expansion pixel: ", actions.expansion(img));
 			this.setState({
 				files: grayimage
 			});
@@ -81,8 +81,11 @@ class Drop extends Component {
 	proceed(files, status) {
 		const grey = actions.convertToFile(files.preview, "grayScale");
 		grey.preview = this.state.files.preview;
+		let face = {};
 		actions.dropHandler(grey)
-		.then((face) => {
+		.then((temp) => {
+			temp.body.preview = this.state.files.preview;
+			face = temp;
 			this.props.receiveTarget(face);
 		})
 		.then(() => {
@@ -90,7 +93,10 @@ class Drop extends Component {
 		})
 		.then((response) => {
 			if (status === "saved" && response.text !== "error is not a face") {
-				actions.saveFaceToDB(this.props.target);
+				actions.saveFaceToDB(face);
+			}
+			else {
+				this.context.router.push("/GEVCS");
 			}
 			alert(response.text);
 		})

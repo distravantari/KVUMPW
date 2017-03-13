@@ -2,7 +2,6 @@
 
 module.exports = function (orm, db) {
   var Faceone = db.define('FaceDB', {
-    Id          : { type: 'number', required: false },
     face        : Object
   },
   {
