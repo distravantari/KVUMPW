@@ -90,7 +90,12 @@ export const grayScale = (imgObj) => {
             
             for (let j = 0; j < gl.length; j++) {
                 if(avg <= gl[j]) {
-                    avg = gl[j];
+                    const fdefisit = Number(avg) - Number(gl[j-1]);
+                    const sdefisit = Number(gl[j]) - Number(avg);
+
+                    if(fdefisit < sdefisit) avg = gl[j-1]
+                    else avg = gl[j];
+                    // avg = gl[j];
                     j = gl.length;
                 }
             }

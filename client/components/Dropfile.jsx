@@ -40,8 +40,8 @@ class Drop extends Component {
 			alert(response);
 		})
 		.then((grayimage) => {
-			// const img = new Image();
-			// img.src = grayimage.preview;
+			const img = new Image();
+			img.src = grayimage.preview;
 			// console.log("list expansion pixel: ", actions.expansion(img));
 			this.setState({
 				files: grayimage
@@ -92,11 +92,13 @@ class Drop extends Component {
 			return actions.checkFace(this.props.target.path);
 		})
 		.then((response) => {
-			if (status === "saved" && response.text !== "error is not a face") {
-				actions.saveFaceToDB(face);
-			}
-			else {
-				this.context.router.push("/GEVCS");
+			if (response.text !== "error is not a face") {
+				if (status === "saved") {
+					actions.saveFaceToDB(face);
+				}
+				else {
+					this.context.router.push("/GEVCS");
+				}
 			}
 			alert(response.text);
 		})

@@ -9,6 +9,9 @@ export const imgDimention = {
 export const graylevel = 4;
 export const pixelExpansion = 9;
 
+export const black = 0;
+export const white = 1;
+
 //pixel deferences between two or more pixel expansion
 export const pixelDiff = () => {
     return (Number(pixelExpansion)/(Number(graylevel)-1));
