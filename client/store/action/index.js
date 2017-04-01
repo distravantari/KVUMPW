@@ -79,15 +79,15 @@ export const grayScale = (imgObj) => {
     canvasContext.drawImage(imgObj, 0, 0);
     const imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
 
-    const skip = 4; // skip four piksel because RGB is 3 piksel
+    const skip = 4; // skip four piksel because RGBA is 3 piksel
     const rgb = 3; // the total piksel RGB has
     const gl = grayLevel();
+    // let actualPixel = [];
 
     for (let y = 0; y < imgPixels.height; y++) {
         for (let x = 0; x < imgPixels.width; x++) {
             const i = (y * skip) * imgPixels.width + x * skip;
             let avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / rgb;
-            
             for (let j = 0; j < gl.length; j++) {
                 if(avg <= gl[j]) {
                     const fdefisit = Number(avg) - Number(gl[j-1]);
@@ -102,14 +102,16 @@ export const grayScale = (imgObj) => {
             imgPixels.data[i] = avg;
             imgPixels.data[i + 1] = avg;
             imgPixels.data[i + 2] = avg;
+            // actualPixel.push(imgPixels.data[i]);
         }
     }
     canvasContext.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+    // console.log('distra ',actualPixel);
     return canvas.toDataURL();
 };
 
-// set image piksel expansion
-export const expansion = (imgObj) => {
+// DEPRECATED
+export const old_expansion = (imgObj) => {
     const canvas = document.createElement("canvas");
     const canvasContext = canvas.getContext("2d");
 
@@ -146,6 +148,85 @@ export const expansion = (imgObj) => {
     // console.log('distra => ', imgPixels.data[5]);
     // console.log(ourPixel[5]);
     return ourPixel;
+};
+
+// set image piksel expansion
+export const expansion = (imgObj) => {
+
+    const canvas = document.createElement("canvas");
+    const canvasContext = canvas.getContext("2d");
+
+    const imgW = imgObj.width;
+    const imgH = imgObj.height;
+    canvas.width = imgW;
+    canvas.height = imgH;
+
+    canvasContext.drawImage(imgObj, 0, 0);
+    const imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
+    const skip = 4; // skip four piksel because RGBA is 3 piksel
+    let ourPixel = [];
+    const gl = grayLevel();
+     for (let y = 0; y < imgPixels.height; y++) {
+        for (let x = 0; x < imgPixels.width; x++) {
+            const idx = (y * skip) * imgPixels.width + x * skip;
+            for (let i = 0; i < gl.length; i++) {
+                if(imgPixels.data[idx] === gl[i]){
+                    const white = i*Number(constant.pixelDiff());
+                    const black = Number(constant.pixelExpansion)-white;
+                    const subpixel = [];
+                    for (let j = 0; j < constant.pixelExpansion; j++) {
+                        if(j < black) {
+                            subpixel.push(0); // black subpixel (#000000)
+                        }
+                        else {
+                            subpixel.push(1); // white subpixel (#FFFFFF)
+                        }
+                    }
+                    ourPixel.push(shuffle(subpixel));
+                    // ourPixel.push(imgPixels.data);
+                }
+            }
+        }
+    }
+    return ourPixel;
+};
+
+// draw pixel
+export const drawPixel = (piksels, levelin) => {
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#000000";
+
+    let x = 0; // position x subpiksel
+    let y = 0; // position y subpiksel
+    let min = 0; // minimum value on subpiksel
+    let max = 0; // maximum value on subpiksel
+    let level = levelin; //row image level (max = img.height)
+
+    piksels.map((piksel,index) => {
+        min = Math.sqrt(piksel.length)*index;
+        max = min+(Math.sqrt(piksel.length)-1); 
+        x = min;
+        y=level*Math.sqrt(piksel.length);
+
+        piksel.map((sub, sidx) => {
+            if(sub == 0) ctx.fillRect(x,y,1,1);
+            x++;
+            if(x > max) {
+                x=min;
+                y++;
+            }
+        }) 
+    })
+}
+
+// to shuffle array value
+export const shuffle = (array) => {
+    for (let i = array.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [array[i - 1], array[j]] = [array[j], array[i - 1]];
+    }
+    return array;
 };
 
 // set image graylevel

@@ -19,4 +19,4 @@ export const pixelDiff = () => {
 
 export const randomize = (item) => {
     return Math.floor(Math.random()*item.length);
-}
+};

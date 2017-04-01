@@ -34,6 +34,8 @@ class Drop extends Component {
 			if (response === "success") {
 				const img = new Image();
 				img.src = files.preview;
+				// console.log("list expansion pixel sting: ", JSON.stringify(actions.expansion(img)));
+				// console.log("list expansion pixel sting: ", actions.expansion(img));
 				files.preview = actions.grayScale(img);
 				return files;
 			}
@@ -42,6 +44,7 @@ class Drop extends Component {
 		.then((grayimage) => {
 			const img = new Image();
 			img.src = grayimage.preview;
+			// console.log("list expansion pixel: ", JSON.stringify(actions.expansion(img)));
 			// console.log("list expansion pixel: ", actions.expansion(img));
 			this.setState({
 				files: grayimage
@@ -60,7 +63,6 @@ class Drop extends Component {
 					<Dropzone ref="dropzone" multiple={false} accept={"image/*"} onDrop={(file) => this.onDrop(file[0])}>
 						<div> Drop a photo, or click to add. </div>
 					</Dropzone>
-					<button type="button" onClick={() => this.context.router.push("/cam")}>Photo</button>
 					<button type="button" onClick={() => this.onOpenClick()}>
 						Click to add
 					</button>
@@ -100,6 +102,7 @@ class Drop extends Component {
 					this.context.router.push("/GEVCS");
 				}
 			}
+			console.log('response');
 			alert(response.text);
 		})
 		.catch((err) => {
