@@ -61,7 +61,7 @@ class GEVCS extends Component {
 						<div className="col-1"> &nbsp; </div>
 						<img className="col-3" src={this.state.images[2].preview} />
 						<h1>GEVCS</h1>
-						<canvas id="myCanvas" width="300" height="150"></canvas>
+						<canvas id="myCanvas" width="2700" height="2295"></canvas>
 					</div>);
 		}
 		return (<div> Loading .. </div>);
@@ -82,7 +82,7 @@ class GEVCS extends Component {
 		console.log("list expansion pixels: ", ex[0]);
 
 		// draw the
-		const chunk = _.chunk(ex[0], img.width);
+		const chunk = _.chunk(ex[2], img.width);
 		console.log("chunk ", chunk.length);
 		chunk.map((value, index) => {
 			actions.drawPixel(value, index); // value = chunk[index]
