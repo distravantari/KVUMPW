@@ -192,8 +192,8 @@ export const expansion = (imgObj) => {
 };
 
 // draw pixel
-export const drawPixel = (piksels, levelin) => {
-    var canvas = document.getElementById("myCanvas");
+export const drawPixel = (piksels, levelin, canvasName) => {
+    var canvas = document.getElementById(canvasName);
     var ctx = canvas.getContext("2d");
     ctx.fillStyle = "#000000";
 
