@@ -65,12 +65,15 @@ class Drop extends Component {
 					</Dropzone>
 					<button type="button" onClick={() => this.onOpenClick()}>
 						Click to add
+					</button> <br />
+					<button type="button" onClick={() => this.context.router.push("/Get")}>
+						Get Face
 					</button>
 				</div>
 				{this.state.files ? (
 					<div>
 						<div>
-							<img src={this.state.files.preview} />
+							<img src={this.state.files.preview} className="col-12"/>
 							<button onClick={() => this.proceed(this.state.files, "next")}>proceed</button>
 							<button onClick={() => this.proceed(this.state.files, "saved")}>save to DB</button>
 						</div>
@@ -91,6 +94,7 @@ class Drop extends Component {
 			this.props.receiveTarget(face);
 		})
 		.then(() => {
+			// console.log("face ", face);
 			return actions.checkFace(this.props.target.path);
 		})
 		.then((response) => {
@@ -102,7 +106,7 @@ class Drop extends Component {
 					this.context.router.push("/GEVCS");
 				}
 			}
-			console.log('response');
+			// console.log('response');
 			alert(response.text);
 		})
 		.catch((err) => {

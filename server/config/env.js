@@ -10,8 +10,8 @@ var models   = require('../app/models/');
 module.exports = function (app) {
     // app.use(compress());
 
-    app.use(bodyParser.json() );
-    app.use(bodyParser.urlencoded({ extended: false }));  
+    app.use(bodyParser.json({ limit: '5mb' }));
+    app.use(bodyParser.urlencoded({ limit: '5mb', extended: false }));  
 
     app.use("/assets", express.static(__root + "/assets")); // eslint-disable-line
     app.use("/public", express.static(__root + "/public")); // eslint-disable-line

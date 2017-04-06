@@ -37,10 +37,24 @@ module.exports = {
             });
         });
     },
-    getShadow: (req, res, next) => {
+    getShadowCandidate: (req, res, next) => {
         req.models.FaceDB.find().run(function (err, face) {
             if(err) return next(err);
             else res.send(face);
+        });
+    },
+    getShadow: (req, res, next) => {
+        req.models.Faceone.find({ name: req.body.name }).run(function (err, faceone) {
+            if(err) return next(err);
+            else {
+                req.models.Facetwo.find({ name: req.body.name }).run(function (err, facetwo) {
+                    if(err) return next(err);
+                    else res.send({
+                        "shadow1": faceone,
+                        "shadow2": facetwo
+                    });
+                });
+            }
         });
     }
 };

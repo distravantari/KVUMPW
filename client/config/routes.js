@@ -5,6 +5,7 @@ import DropFile from "az-client/components/Dropfile";
 import GEVCS from "az-client/components/GEVCS";
 import Webcam from "az-client/unused/Webcam";
 import Face from "az-client/unused/Face";
+import GetFaces from "az-client/components/GetFaces";
 
 // pages
 import Index from "az-client/pages/index";
@@ -19,6 +20,7 @@ export default(
       <Route path="/Cam" component={ Webcam }/>
       <Route path="/Face" component={ Face }/>
       <Route path="/GEVCS" component={ GEVCS }/>
+      <Route path="/Get" component={ GetFaces }/>
       <IndexRoute component={ DropFile } />
     </Route>
   </Router>

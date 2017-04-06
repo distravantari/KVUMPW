@@ -2,14 +2,15 @@
 
 module.exports = function (orm, db) {
   var Facetwo = db.define('Facetwo', {
-    Id          : { type: 'number', required: false },
-    face        : Object
+    face        : Object,
+    name        : String
   },
   {
     methods: {
       serialize: function () {
         return {
-          face : this.face
+          face    : this.face,
+          name    : String
         }
       }
     }
