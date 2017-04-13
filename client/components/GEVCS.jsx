@@ -60,6 +60,10 @@ class GEVCS extends Component {
 							<button onClick={() => this.proceed()}> proceed </button>
 						</div>
 					</div>
+					<div className="col-12">
+						<br /> <hr/><h1>Cummulation of the two shadow above</h1> <hr/> <br />
+						<canvas className="col-5" id="cumulation" width="900" height="765"></canvas>
+					</div>
 				</div>);
 			}
 			return (
@@ -126,6 +130,14 @@ class GEVCS extends Component {
 			this.draw(chunk, canvasName);
 		}
 
+		// draw cumulation between the two shadow
+		const result = [];
+		extrans[0].map((shadow1, index) => {
+			const shadow2 = extrans[1][index];
+			result.push(actions.cumulation(shadow1, shadow2));
+		});
+		const chunk = _.chunk(result, img.width);
+		this.draw(chunk, "cumulation");
 	}
 
 	proceed() {
