@@ -2,6 +2,27 @@ var cv = require('opencv');
 // var buffer = new Buffer(img, 'base64');
 
 module.exports = {
+    predictFace: (req, res, next) => {
+        var trainingData = [];
+        var images = fs.readdirSync("./client/store/tmp/");
+        
+        // Collect all the images we are going to use to test the algorithm
+        // ".pgm" are grey scale images
+        for (var j = 1; j<10; j++){
+            trainingData.push([1,"./client/store/tmp/" + j + ".pgm" ]);
+        }
+
+        // Test algorithm
+        cv.readImage("./client/store/tmp/face-target.png", function(e, im){
+
+            var facerec = cv.FaceRecognizer.createLBPHFaceRecognizer();
+            facerec.trainSync(trainingData);
+
+            // Try to recognize the person in "s2_2.pgm" against the "s1" folder tests
+            console.log(facerec.predictSync(im));
+
+        });
+    },
     detect: (req, res, next) => {
         var COLOR = [0, 255, 0]; // default red
         var thickness = 2; // default 1

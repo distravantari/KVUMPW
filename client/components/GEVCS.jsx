@@ -94,7 +94,6 @@ class GEVCS extends Component {
 			if (index === 1) this.setState({ targetExpansion: actions.expansion });
 			if (index === 2) this.setState({ shadowAExpansion: actions.expansion });
 			else this.setState({ shadowBExpansion: actions.expansion });
-			// console.log("list expansion pixel: ", actions.expansion(img));
 			ex.push(actions.expansion(img));
 		});
 		console.log("list expansion pixels1: ", ex);
@@ -116,7 +115,19 @@ class GEVCS extends Component {
 
 		// manage pixel based on rules
 		// pixel expansion that already been transform/ manage
-		const extrans = actions.managePixel(ex);
+		let extrans = actions.managePixel(ex);
+		const extrans2 = [];
+		const extrans3 = [];
+		ex[0].map((target, index) => {
+			const shadow1 = extrans[0][index];
+			const shadow2 = extrans[1][index];
+			extrans2.push(actions.cumulation(shadow1, target));
+			extrans3.push(actions.cumulation(shadow2, target));
+		});
+		extrans = [extrans2, extrans3];
+		console.log("extrans ", extrans);
+		// extrans = [actions.cumulation(ex[1], ex[0]), actions.cumulation(ex[2], ex[0])];
+
 
 		// draw the image with pixel expansion
 		for (let i = 0; i < extrans.length; i++) {
@@ -169,15 +180,14 @@ class GEVCS extends Component {
 		const length = 3; // batasan
 		if (temp.length === length) {
 			this.setShadow(temp)
-			.then((test) => {
-				console.log("distra ", test);
+			.then(() => {
 				this.expansion();
 			});
 		}
 	}
 
 	setShadow(temp) {
-		console.log("shadow");
+		console.log("shadow: ", temp);
 		return new Promise((resolve) => {
 			resolve(
 				this.setState({

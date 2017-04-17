@@ -237,7 +237,6 @@ export const expansion = (imgObj) => {
 
     const canvas = document.createElement("canvas");
     const canvasContext = canvas.getContext("2d");
-
     const imgW = imgObj.width;
     const imgH = imgObj.height;
     canvas.width = imgW;

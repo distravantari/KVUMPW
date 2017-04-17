@@ -2,7 +2,7 @@ export const ACTReceive = "RECEIVE";
 export const salt = "MAR0901";
 
 export const imgDimention = {
-    height: 255,
+    height: 300,
 	width: 300
 };
 
