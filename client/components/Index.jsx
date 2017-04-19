@@ -20,7 +20,8 @@ class Drop extends Component {
 	}
 
 	onDrop(files) {
-		actions.checkImage(files.preview)
+		// console.log("holll ", actions.test);
+		actions.helper.image.checkImage(files.preview)
 		.then((img) => {
 			let result = `image height/widht should be ${constant.imgDimention.height} and ${constant.imgDimention.width}`;
 			if (img.height === constant.imgDimention.height) {
@@ -36,7 +37,7 @@ class Drop extends Component {
 				img.src = files.preview;
 				// console.log("list expansion pixel sting: ", JSON.stringify(actions.expansion(img)));
 				// console.log("list expansion pixel sting: ", actions.expansion(img));
-				files.preview = actions.grayScale(img);
+				files.preview = actions.helper.image.grayScale(img);
 				return files;
 			}
 			alert(response);
@@ -84,10 +85,10 @@ class Drop extends Component {
 	}
 
 	proceed(files, status) {
-		const grey = actions.convertToFile(files.preview, "grayScale");
+		const grey = actions.helper.image.convertToFile(files.preview, "grayScale");
 		grey.preview = this.state.files.preview;
 		let face = {};
-		actions.dropHandler(grey)
+		actions.helper.upload.dropHandler(grey)
 		.then((temp) => {
 			temp.body.preview = this.state.files.preview;
 			face = temp;
@@ -95,15 +96,15 @@ class Drop extends Component {
 		})
 		.then(() => {
 			// console.log("face ", face);
-			return actions.checkFace(this.props.target.path);
+			return actions.helper.face.checkFace(this.props.target.path);
 		})
 		.then((response) => {
 			if (response.text !== "error is not a face") {
 				if (status === "saved") {
-					actions.saveFaceToDB(face);
+					actions.helper.face.saveFaceToDB(face);
 				}
 				else {
-					this.context.router.push("/GEVCS");
+					this.context.router.push("/Encryption");
 				}
 			}
 			// console.log('response');
@@ -123,7 +124,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      receiveTarget: (face) => dispatch(actions.receiveTarget(face))
+      receiveTarget: (face) => dispatch(actions.helper.gevcs.receiveTarget(face))
     };
 };
 

@@ -1,10 +1,8 @@
 import React from "react";
 
 // component
-import DropFile from "az-client/components/Dropfile";
-import GEVCS from "az-client/components/GEVCS";
-import Webcam from "az-client/unused/Webcam";
-import Face from "az-client/unused/Face";
+import Home from "az-client/components/";
+import Encryption from "az-client/components/Encryption";
 import GetFaces from "az-client/components/GetFaces";
 
 // pages
@@ -17,11 +15,10 @@ const history = useRouterHistory(createHashHistory)({});
 export default(
   <Router history={history} onUpdate={() => window.scrollTo(0, 0)}>
     <Route path="/" component={ Index } >
-      <Route path="/Cam" component={ Webcam }/>
-      <Route path="/Face" component={ Face }/>
-      <Route path="/GEVCS" component={ GEVCS }/>
+      <Route path="/Encryption" component={ Encryption }/>
       <Route path="/Get" component={ GetFaces }/>
-      <IndexRoute component={ DropFile } />
+      <IndexRoute component={ Home } />
     </Route>
   </Router>
 );
+

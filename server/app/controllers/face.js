@@ -66,6 +66,7 @@ module.exports = {
     },
     getShadow: (req, res, next) => {
         req.models.Faceone.find({ name: req.body.name }).run(function (err, faceone) {
+            // console.log("hai ", faceone[0].face.toString('utf8'));
             if(err) return next(err);
             else {
                 req.models.Facetwo.find({ name: req.body.name }).run(function (err, facetwo) {

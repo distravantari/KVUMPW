@@ -25,6 +25,7 @@ class GEVCS extends Component {
 
 	componentWillMount() {
 		const temp = [];
+		// console.log("target ", this.props.target);
 		temp.push(this.props.target);
 		this.setState({
 			images: temp
@@ -32,7 +33,6 @@ class GEVCS extends Component {
 	}
 
 	render() {
-		// console.log('stateee ', this.state);
 		if (this.state.shadowCandidate.length <= 0) {
 			if (this.state.images.length > 1) {
 				return (<div>
@@ -45,14 +45,14 @@ class GEVCS extends Component {
 					</div>
 					<div className="col-12">
 						<br /> <hr/><h1>Image Expansion</h1> <hr/> <br />
-						<canvas id="target" width="900" height="765"></canvas>
-						<canvas id="shadow1" width="900" height="765"></canvas>
-						<canvas id="shadow2" width="900" height="765"></canvas>
+						<canvas id="target" width="900" height="900"></canvas>
+						<canvas id="shadow1" width="900" height="900"></canvas>
+						<canvas id="shadow2" width="900" height="900"></canvas>
 					</div>
 					<div className="col-12">
 						<br /> <hr/><h1>Shadow Transform</h1> <hr/> <br />
-						<canvas className="col-5" id="st1" width="900" height="765"></canvas>
-						<canvas className="col-5" id="st2" width="900" height="765"></canvas>
+						<canvas className="col-5" id="st1" width="900" height="900"></canvas>
+						<canvas className="col-5" id="st2" width="900" height="900"></canvas>
 						<div>
 							<p> insert your name</p> <br />
 							<input type="text" ref={(ref) => this.nameRef = ref}/>
@@ -62,7 +62,7 @@ class GEVCS extends Component {
 					</div>
 					<div className="col-12">
 						<br /> <hr/><h1>Cummulation of the two shadow above</h1> <hr/> <br />
-						<canvas className="col-5" id="cumulation" width="900" height="765"></canvas>
+						<canvas className="col-5" id="cumulation" width="900" height="900"></canvas>
 					</div>
 				</div>);
 			}
@@ -89,14 +89,14 @@ class GEVCS extends Component {
 		// expanse all three image pixel
 		const ex = [];
 		const img = new Image();
-		this.state.images.map((val, index) => {
+		this.state.images.map((val) => {
 			img.src = val.preview;
-			if (index === 1) this.setState({ targetExpansion: actions.expansion });
-			if (index === 2) this.setState({ shadowAExpansion: actions.expansion });
-			else this.setState({ shadowBExpansion: actions.expansion });
-			ex.push(actions.expansion(img));
+			// if (index === 1) this.setState({ targetExpansion: actions.helper.image.expansion(img) });
+			// if (index === 2) this.setState({ shadowAExpansion: actions.helper.image.expansion(img) });
+			// else this.setState({ shadowBExpansion: actions.helper.image.expansion(img) });
+			ex.push(actions.helper.image.expansion(img));
 		});
-		console.log("list expansion pixels1: ", ex);
+		console.log("loading ... ", this.state.images);
 
 		// draw the image with pixel expansion
 		for (let i = 0; i < ex.length; i++) {
@@ -109,25 +109,26 @@ class GEVCS extends Component {
 			if (i === 1) canvasName = "shadow1";
 			else if (i === 2) canvasName = "shadow2";
 
-			console.log("chunk ", chunk.length);
-			this.draw(chunk, canvasName);
+			// console.log("chunk ", chunk.length);
+			actions.helper.image.draw(chunk, canvasName);
 		}
 
 		// manage pixel based on rules
 		// pixel expansion that already been transform/ manage
-		let extrans = actions.managePixel(ex);
+		let extrans = actions.helper.gevcs.managePixel(ex);
 		const extrans2 = [];
 		const extrans3 = [];
 		ex[0].map((target, index) => {
 			const shadow1 = extrans[0][index];
 			const shadow2 = extrans[1][index];
-			extrans2.push(actions.cumulation(shadow1, target));
-			extrans3.push(actions.cumulation(shadow2, target));
+			extrans2.push(actions.helper.gevcs.cumulation(shadow1, target));
+			extrans3.push(actions.helper.gevcs.cumulation(shadow2, target));
 		});
 		extrans = [extrans2, extrans3];
-		console.log("extrans ", extrans);
-		// extrans = [actions.cumulation(ex[1], ex[0]), actions.cumulation(ex[2], ex[0])];
+		// console.log("extrans ", extrans);
 
+		this.setState({ shadowAExpansion: extrans2 });
+		this.setState({ shadowBExpansion: extrans3 });
 
 		// draw the image with pixel expansion
 		for (let i = 0; i < extrans.length; i++) {
@@ -138,34 +139,40 @@ class GEVCS extends Component {
 			if (i === 1) canvasName = "st2";
 
 			console.log("chunk ", chunk.length);
-			this.draw(chunk, canvasName);
+			actions.helper.image.draw(chunk, canvasName);
 		}
 
 		// draw cumulation between the two shadow
 		const result = [];
 		extrans[0].map((shadow1, index) => {
 			const shadow2 = extrans[1][index];
-			result.push(actions.cumulation(shadow1, shadow2));
+			result.push(actions.helper.gevcs.cumulation(shadow1, shadow2));
 		});
 		const chunk = _.chunk(result, img.width);
-		this.draw(chunk, "cumulation");
+		actions.helper.image.draw2(chunk, "cumulation");
 	}
 
 	proceed() {
+		console.log("will you?? ", this.state);
 		// convert canvas (shadow) to image
-		const imgshadow1 = actions.convertCanvasToImage(document.getElementById("st1"));
-		const imgshadow2 = actions.convertCanvasToImage(document.getElementById("st2"));
-		// convert image (shadow) to file
-		const fileshadow1 = actions.convertToFile(imgshadow1.src, "shadow1");
-		fileshadow1.preview = imgshadow1.src;
-		const fileshadow2 = actions.convertToFile(imgshadow2.src, "shadow2");
-		fileshadow2.preview = imgshadow2.src;
+		const imgshadow1 = actions.helper.image.convertCanvasToImage(document.getElementById("st1"));
+		const imgshadow2 = actions.helper.image.convertCanvasToImage(document.getElementById("st2"));
 		// set name with hash(name+salt)
 		const name = this.nameRef.value;
-		actions.saveShadowToDB(fileshadow1, fileshadow2, name);
+		const test1 = {
+			image: imgshadow1.src,
+			piksel: this.state.shadowAExpansion
+		};
+		const test2 = {
+			image: imgshadow2.src,
+			piksel: this.state.shadowBExpansion
+		};
+		// this.state.shadowAExpansion;
+		// this.state.shadowBExpansion;
+		actions.helper.gevcs.saveShadowToDB(test1, test2, name);
 		// back to main page
-		alert("successfully add shadow to database");
-		this.context.router.push("/");
+		// alert("successfully add shadow to database");
+		// this.context.router.push("/");
 	}
 
 	choose(val, idx) {
@@ -198,15 +205,8 @@ class GEVCS extends Component {
 		});
 	}
 
-	draw(chunk, canvasName) {
-		console.log("chunk check ", chunk);
-		chunk.map((value, index) => {
-			actions.drawPixel(value, index, canvasName); // value = chunk[index]
-		});
-	}
-
 	getShadowManually() {
-		actions.receiveFaceDB()
+		actions.helper.face.receiveFaceDB()
 		.then((object) => {
 			this.setState({
 				shadowCandidate: object
@@ -219,7 +219,7 @@ class GEVCS extends Component {
 
 	getMostSimilarShadow() {
 		const temp = this.state.images;
-		actions.receiveFaceDB()
+		actions.helper.face.receiveFaceDB()
 		.then((object) => {
 			const randIdx1 = constant.randomize(object); // random index for first shadow
 			let randIdx2 = constant.randomize(object); // random index for second shadow
