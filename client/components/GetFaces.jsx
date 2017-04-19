@@ -1,5 +1,6 @@
 import { Component, PropTypes } from "react";
 import * as actions from "az-client/store/action";
+import * as constant from "az-client/store/action/const";
 import _ from "lodash";
 
 // Home component
@@ -28,6 +29,7 @@ class GetFaces extends Component {
 				<div className="col-12">
 					{this.state.shadow1 ? (
 					<div>
+						<br /> <hr/><h1>Your Shadows</h1> <hr/> <br />
 						<div>
 							<img src={this.state.shadow1.src} className="col-6"/>
 							<img src={this.state.shadow2.src} className="col-6"/>
@@ -72,9 +74,8 @@ class GetFaces extends Component {
 				const shadow2 = shadow[1][index];
 				result.push(actions.helper.gevcs.cumulation(shadow1, shadow2));
 			});
-			const width = 300;
-			const chunk = _.chunk(result, width);
-			actions.helper.image.draw2(chunk, "target");
+			const chunk = _.chunk(result, constant.imgDimention.width);
+			actions.helper.image.draw(chunk, "target");
 		})
 		.catch((err) => {
 			alert("error getting shadow..");

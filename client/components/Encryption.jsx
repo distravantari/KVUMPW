@@ -110,7 +110,7 @@ class GEVCS extends Component {
 			else if (i === 2) canvasName = "shadow2";
 
 			// console.log("chunk ", chunk.length);
-			actions.helper.image.draw(chunk, canvasName);
+			actions.helper.image.drawPengaturan(chunk, canvasName);
 		}
 
 		// manage pixel based on rules
@@ -139,7 +139,7 @@ class GEVCS extends Component {
 			if (i === 1) canvasName = "st2";
 
 			console.log("chunk ", chunk.length);
-			actions.helper.image.draw(chunk, canvasName);
+			actions.helper.image.drawPengaturan(chunk, canvasName);
 		}
 
 		// draw cumulation between the two shadow
@@ -149,7 +149,7 @@ class GEVCS extends Component {
 			result.push(actions.helper.gevcs.cumulation(shadow1, shadow2));
 		});
 		const chunk = _.chunk(result, img.width);
-		actions.helper.image.draw2(chunk, "cumulation");
+		actions.helper.image.draw(chunk, "cumulation");
 	}
 
 	proceed() {
@@ -171,8 +171,8 @@ class GEVCS extends Component {
 		// this.state.shadowBExpansion;
 		actions.helper.gevcs.saveShadowToDB(test1, test2, name);
 		// back to main page
-		// alert("successfully add shadow to database");
-		// this.context.router.push("/");
+		alert("successfully add shadow to database");
+		this.context.router.push("/");
 	}
 
 	choose(val, idx) {

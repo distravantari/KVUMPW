@@ -45,47 +45,6 @@ export const grayScale = (imgObj) => {
     return canvas.toDataURL();
 };
 
-// DEPRECATED 
-// set image piksel expansion
-export const old_expansion = (imgObj) => {
-    const canvas = document.createElement("canvas");
-    const canvasContext = canvas.getContext("2d");
-
-    const imgW = imgObj.width;
-    const imgH = imgObj.height;
-    canvas.width = imgW;
-    canvas.height = imgH;
-
-    canvasContext.drawImage(imgObj, 0, 0);
-    const imgPixels = canvasContext.getImageData(0, 0, imgW, imgH);
-
-    let ourPixel = [];
-    const gl = grayLevel();
-    imgPixels.data.map((val, idx) => {
-        for (let i = 0; i < gl.length; i++) {
-            if(val === gl[i]){
-                const white = i*Number(constant.pixelDiff());
-                const black = Number(constant.pixelExpansion)-white;
-                const subpixel = [];
-                for (let j = 0; j < constant.pixelExpansion; j++) {
-                    if(j < black) {
-                        subpixel.push(0); // black subpixel
-                    }
-                    else {
-                        subpixel.push(1); // white subpixel
-                    }
-                }
-                ourPixel.push(subpixel);
-            }
-        }
-    });
-
-    // console.log(imgPixels.data.entries()); // to see all the imgPixels entries
-    // console.log('distra => ', imgPixels.data[5]);
-    // console.log(ourPixel[5]);
-    return ourPixel;
-};
-
 // to shuffle array value
 export const shuffle = (array) => {
     for (let i = array.length; i; i--) {
@@ -215,42 +174,12 @@ export const convertImageToCanvas = (image) => {
 	return canvas;
 }
 
-// draw pixel
-export const drawPixel = (piksels, levelin, canvasName) => {
-    var canvas = document.getElementById(canvasName);
-    var ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#000000";
-
-    let x = 0; // position x subpiksel
-    let y = 0; // position y subpiksel
-    let min = 0; // minimum value on subpiksel
-    let max = 0; // maximum value on subpiksel
-    let level = levelin; //row image level (max = img.height)
-
-    piksels.map((piksel,index) => {
-        min = Math.sqrt(piksel.length)*index;
-        max = min+(Math.sqrt(piksel.length)-1); 
-        x = min;
-        y=level*Math.sqrt(piksel.length);
-
-        piksel.map((sub, sidx) => {
-            if(sub == 0) ctx.fillRect(x,y,1,1);
-            x++;
-            if(x > max) {
-                x=min;
-                y++;
-            }
-        }) 
-    })
-};
-
-export const draw2 = (chunk, canvasName) => {
+export const draw = (chunk, canvasName) => {
     // console.log("chunk check ", chunk);
     chunk.map((value, index) => {
         drawPixel2(value, index, canvasName); // value = chunk[index]
     });
 }
-
 // draw pixel
 export const drawPixel2 = (piksels, levelin, canvasName) => {
     var canvas = document.getElementById(canvasName);
@@ -280,12 +209,40 @@ export const drawPixel2 = (piksels, levelin, canvasName) => {
     })
 };
 
-export const draw = (chunk, canvasName) => {
+export const drawPengaturan = (chunk, canvasName) => {
     // console.log("chunk check ", chunk);
     chunk.map((value, index) => {
         drawPixel(value, index, canvasName); // value = chunk[index]
     });
 }
+// draw pixel
+export const drawPixel = (piksels, levelin, canvasName) => {
+    var canvas = document.getElementById(canvasName);
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#000000";
+
+    let x = 0; // position x subpiksel
+    let y = 0; // position y subpiksel
+    let min = 0; // minimum value on subpiksel
+    let max = 0; // maximum value on subpiksel
+    let level = levelin; //row image level (max = img.height)
+
+    piksels.map((piksel,index) => {
+        min = Math.sqrt(piksel.length)*index;
+        max = min+(Math.sqrt(piksel.length)-1); 
+        x = min;
+        y=level*Math.sqrt(piksel.length);
+
+        piksel.map((sub, sidx) => {
+            if(sub == 0) ctx.fillRect(x,y,1,1);
+            x++;
+            if(x > max) {
+                x=min;
+                y++;
+            }
+        }) 
+    })
+};
 
 export const arrayBufferToString = (buffer) => {
 
