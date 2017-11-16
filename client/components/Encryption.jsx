@@ -33,6 +33,9 @@ class GEVCS extends Component {
 	}
 
 	render() {
+		const WIDTH = constant.canvas.width;
+		const HEIGHT = constant.canvas.height;
+
 		if (this.state.shadowCandidate.length <= 0) {
 			if (this.state.images.length > 1) {
 				return (<div>
@@ -45,14 +48,14 @@ class GEVCS extends Component {
 					</div>
 					<div className="col-12">
 						<br /> <hr/><h1>Image Expansion</h1> <hr/> <br />
-						<canvas id="target" width="900" height="900"></canvas>
-						<canvas id="shadow1" width="900" height="900"></canvas>
-						<canvas id="shadow2" width="900" height="900"></canvas>
+						<canvas id="target" width={WIDTH} height={HEIGHT}></canvas>
+						<canvas id="shadow1" width={WIDTH} height={HEIGHT}></canvas>
+						<canvas id="shadow2" width={WIDTH} height={HEIGHT}></canvas>
 					</div>
 					<div className="col-12">
 						<br /> <hr/><h1>Shadow Transform</h1> <hr/> <br />
-						<canvas className="col-5" id="st1" width="900" height="900"></canvas>
-						<canvas className="col-5" id="st2" width="900" height="900"></canvas>
+						<canvas className="col-5" id="st1" width={WIDTH} height={HEIGHT}></canvas>
+						<canvas className="col-5" id="st2" width={WIDTH} height={HEIGHT}></canvas>
 						<div>
 							<p> insert your name</p> <br />
 							<input type="text" ref={(ref) => this.nameRef = ref}/>
@@ -62,14 +65,28 @@ class GEVCS extends Component {
 					</div>
 					<div className="col-12">
 						<br /> <hr/><h1>Cummulation of the two shadow above</h1> <hr/> <br />
-						<canvas className="col-5" id="cumulation" width="900" height="900"></canvas>
+						<canvas className="col-5" id="cumulation" width={WIDTH} height={HEIGHT}></canvas>
 					</div>
 				</div>);
 			}
 			return (
 				<div>
-					<button onClick={() => this.getShadowManually()}> choose shadow manually </button>
-					<button onClick={() => this.getMostSimilarShadow()}> get the most similar </button>
+					<h3>Please fill the form before you hit the button</h3>
+					<form>
+						<table>
+							<tbody>
+								<tr>
+									<td>Name </td>
+									<td><input type="text" name="name" /></td>
+								</tr>
+								<tr>
+									<td>Gendre</td>
+									<td><input type="text" name="name" /></td>
+									<td><button onClick={(val) => this.getShadowManually(val)}> Proceed </button></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
 				</div>);
 		}
 		return (
@@ -82,7 +99,7 @@ class GEVCS extends Component {
 				) : <div> loading .. </div>
 				}
 			</div>);
-		// NB: canvas width: 300x3 amd height: 255x3
+		// NB: canvas width: (image width)x3 amd height: (image width)x3
 	}
 
 	expansion() {
@@ -91,9 +108,6 @@ class GEVCS extends Component {
 		const img = new Image();
 		this.state.images.map((val) => {
 			img.src = val.preview;
-			// if (index === 1) this.setState({ targetExpansion: actions.helper.image.expansion(img) });
-			// if (index === 2) this.setState({ shadowAExpansion: actions.helper.image.expansion(img) });
-			// else this.setState({ shadowBExpansion: actions.helper.image.expansion(img) });
 			ex.push(actions.helper.image.expansion(img));
 		});
 		console.log("loading ... ", this.state.images);
@@ -149,11 +163,10 @@ class GEVCS extends Component {
 			result.push(actions.helper.gevcs.cumulation(shadow1, shadow2));
 		});
 		const chunk = _.chunk(result, img.width);
-		actions.helper.image.draw(chunk, "cumulation");
+		actions.helper.image.drawPengaturan(chunk, "cumulation");
 	}
 
 	proceed() {
-		console.log("will you?? ", this.state);
 		// convert canvas (shadow) to image
 		const imgshadow1 = actions.helper.image.convertCanvasToImage(document.getElementById("st1"));
 		const imgshadow2 = actions.helper.image.convertCanvasToImage(document.getElementById("st2"));
@@ -205,7 +218,8 @@ class GEVCS extends Component {
 		});
 	}
 
-	getShadowManually() {
+	getShadowManually(val) {
+		val.preventDefault();
 		actions.helper.face.receiveFaceDB()
 		.then((object) => {
 			this.setState({
@@ -221,6 +235,7 @@ class GEVCS extends Component {
 		const temp = this.state.images;
 		actions.helper.face.receiveFaceDB()
 		.then((object) => {
+			console.log("object", object);
 			const randIdx1 = constant.randomize(object); // random index for first shadow
 			let randIdx2 = constant.randomize(object); // random index for second shadow
 

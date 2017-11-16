@@ -34,24 +34,21 @@ module.exports = {
 
             im.detectObject(cv.FACE_CASCADE, {}, function(err, faces) {
                 if (err) {
-                    // res.send('is not a face');
                     response += " cant use cascade";
                     throw err;
                 }
                 else{
                     if(faces.length <= 0){
-                        // res.send('is not a face');
-                        response += " is not a face";
+                        // response += " is not a face";
+                        response = "success ";
                     }else{
                         for (var i = 0; i < faces.length; i++) {
                             face = faces[i];
                             im.rectangle([face.x, face.y], [face.width, face.height], COLOR, 2);
                         }
                         im.save('./client/store/tmp/face-target.png');
-                        // res.send('success ');
                         response = "success ";
                     }
-                    // console.log('row ', im.row(0));
                 }
 
                 res.send(response);

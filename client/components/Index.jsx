@@ -20,9 +20,10 @@ class Drop extends Component {
 	}
 
 	onDrop(files) {
-		// console.log("holll ", actions.test);
 		actions.helper.image.checkImage(files.preview)
 		.then((img) => {
+			// check the image, is the image input have the proper weight/ width
+			console.log(img);
 			let result = `image height/widht should be ${constant.imgDimention.height} and ${constant.imgDimention.width}`;
 			if (img.height === constant.imgDimention.height) {
 				if (img.width === constant.imgDimention.width) {
@@ -32,17 +33,18 @@ class Drop extends Component {
 			return result;
 		})
 		.then((response) => {
+			// if the image have the proper height/width then convert the image to grayscale
 			if (response === "success") {
 				const img = new Image();
 				img.src = files.preview;
-				// console.log("list expansion pixel sting: ", JSON.stringify(actions.expansion(img)));
-				// console.log("list expansion pixel sting: ", actions.expansion(img));
+				// we use helper class to convert image to ghrayscale
 				files.preview = actions.helper.image.grayScale(img);
 				return files;
 			}
 			alert(response);
 		})
 		.then((grayimage) => {
+			// then save the grayscale image to state (redux)
 			const img = new Image();
 			img.src = grayimage.preview;
 			// console.log("list expansion pixel: ", JSON.stringify(actions.expansion(img)));
@@ -61,12 +63,12 @@ class Drop extends Component {
 		return (
 			<div>
 				<div style={ { cursor: "pointer" } }>
-					<Dropzone ref="dropzone" multiple={false} accept={"image/*"} onDrop={(file) => this.onDrop(file[0])}>
+					<Dropzone ref="dropzone" multiple={false} accept={"image/*"} onDrop={(file) => this.onDrop(file[0])} style={ constant.dropzonestyle }>
 						<div> Drop a photo, or click to add. </div>
 					</Dropzone>
 					<button type="button" onClick={() => this.onOpenClick()}>
 						Click to add
-					</button> <br />
+					</button>
 					<button type="button" onClick={() => this.context.router.push("/Get")}>
 						Get Face
 					</button>
@@ -74,7 +76,7 @@ class Drop extends Component {
 				{this.state.files ? (
 					<div>
 						<div>
-							<img src={this.state.files.preview} className="col-12"/>
+							<img src={this.state.files.preview} className="col-12" width={ constant.imgDimention.width }/>
 							<button onClick={() => this.proceed(this.state.files, "next")}>proceed</button>
 							<button onClick={() => this.proceed(this.state.files, "saved")}>save to DB</button>
 						</div>
@@ -84,6 +86,7 @@ class Drop extends Component {
 		);
 	}
 
+	// this function is called when user click the proceed button
 	proceed(files, status) {
 		const grey = actions.helper.image.convertToFile(files.preview, "grayScale");
 		grey.preview = this.state.files.preview;

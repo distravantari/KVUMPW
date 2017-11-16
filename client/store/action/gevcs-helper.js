@@ -60,7 +60,7 @@ export const getRangeTransparancy = (T1, T2) => {
     return [max, min]
 }
 
-// manage the shadow pixel based on the rules (please read the rule again !!!!)
+// manage the shadow pixel based on the rules
 export const managePixel = (expansion) => {
     let newE = [expansion[1], expansion[2]] // new expansion, so it won't override the last expansion
     let same = 0; //( for testing purpose)

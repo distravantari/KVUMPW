@@ -130,7 +130,7 @@ export const grayLevel = () => {
     return values;
 };
 
-// check if image dimention is 300x255
+// check if image dimention is as expected
 export const checkImage = (blob) => {
     const check = new Promise((resolve) => {
         const img = document.createElement("img");
@@ -173,41 +173,6 @@ export const convertImageToCanvas = (image) => {
 
 	return canvas;
 }
-
-export const draw = (chunk, canvasName) => {
-    // console.log("chunk check ", chunk);
-    chunk.map((value, index) => {
-        drawPixel2(value, index, canvasName); // value = chunk[index]
-    });
-}
-// draw pixel
-export const drawPixel2 = (piksels, levelin, canvasName) => {
-    var canvas = document.getElementById(canvasName);
-    var ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#000000";
-
-    let x = 0; // position x subpiksel
-    let y = 0; // position y subpiksel
-    let min = 0; // minimum value on subpiksel
-    let max = 0; // maximum value on subpiksel
-    let level = levelin; //row image level (max = img.height)
-
-    piksels.map((piksel,index) => {
-        min = Math.sqrt(piksel.length)*index;
-        max = min+(Math.sqrt(piksel.length)-1); 
-        x = min;
-        y=level*Math.sqrt(piksel.length);
-
-        piksel.map((sub, sidx) => {
-            if(sub == 1) ctx.fillRect(x,y,1,1);
-            x++;
-            if(x > max) {
-                x=min;
-                y++;
-            }
-        }) 
-    })
-};
 
 export const drawPengaturan = (chunk, canvasName) => {
     // console.log("chunk check ", chunk);

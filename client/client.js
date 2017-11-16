@@ -6,7 +6,6 @@ import routes from "./config/routes";
 
 module.exports = {
 	init() {
-		// render(<App/>, document.getElementById("app"));
 		render(<Provider store={store}>{routes}</Provider>, document.getElementById("app"));
 	}
 };
